@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Keuangan PSAK 35</title>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="login-screen" id="login-screen">
+        <div class="login-card">
+            <div class="login-card-header">
+                <div class="login-logo-wrapper">
+                    <img id="login-logo-img" alt="Logo Entitas" src="" style="display:none;" />
+                </div>
+                <h1 id="login-heading">Masuk ke NonProfitFin</h1>
+                <p>Masukkan username dan password untuk melanjutkan.</p>
+            </div>
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="login-username">Username</label>
+                    <input type="text" id="login-username" class="form-control" placeholder="admin" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+                </div>
+                <div class="form-actions" style="justify-content: space-between; gap: 0.75rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Masuk</button>
+                    <button type="button" class="btn btn-outline" id="btn-show-user-settings" style="flex: 1;">Tambah Akun</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <i class="fa-solid fa-leaf"></i>
+                <h2>NonProfit<span class="highlight">Fin</span></h2>
+            </div>
+            <nav class="main-nav">
+                <a href="#" class="nav-item active" data-target="dashboard">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-target="journal-input">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span>Jurnal Umum</span>
+                </a>
+                <a href="#" class="nav-item" data-target="reports">
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                    <span>Laporan Keuangan</span>
+                </a>
+                
+                <div class="nav-group">
+                    <a href="#" class="nav-item nav-dropdown-toggle">
+                        <i class="fa-solid fa-gear"></i>
+                        <span>Pengaturan Akun</span>
+                        <i class="fa-solid fa-chevron-down dropdown-icon" style="margin-left: auto; transition: transform var(--transition-fast);"></i>
+                    </a>
+                    <div class="nav-submenu" style="display: none; padding-left: 1.5rem; margin-top: 0.25rem;">
+                        <a href="#" class="nav-item" data-target="opening-balance" style="padding: 0.6rem 1rem; font-size: 0.9rem;">
+                            <i class="fa-solid fa-scale-unbalanced" style="font-size: 0.9rem;"></i>
+                            <span>Setup Saldo Awal</span>
+                        </a>
+                        <a href="#" class="nav-item" data-target="settings-identity" style="padding: 0.6rem 1rem; font-size: 0.9rem;">
+                            <i class="fa-solid fa-id-card" style="font-size: 0.9rem;"></i>
+                            <span>Identitas Entitas</span>
+                        </a>
+                        <a href="#" class="nav-item" data-target="settings-users" style="padding: 0.6rem 1rem; font-size: 0.9rem;">
+                            <i class="fa-solid fa-user-lock" style="font-size: 0.9rem;"></i>
+                            <span>Akun Login</span>
+                        </a>
+                        <a href="#" class="nav-item" data-target="settings-coa" style="padding: 0.6rem 1rem; font-size: 0.9rem;">
+                            <i class="fa-solid fa-list" style="font-size: 0.9rem;"></i>
+                            <span>Bagan Akun</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="page-title">
+                    <h1 id="current-page-title">Dashboard</h1>
+                </div>
+                <div class="user-profile">
+                    <div class="avatar"><i class="fa-solid fa-user"></i></div>
+                    <div class="user-info">
+                        <span class="user-name">Admin Keuangan</span>
+                        <span class="user-role">Entitas Nonlaba</span>
+                    </div>
+                    <button class="btn btn-outline btn-sm" id="btn-logout" style="margin-left: 1rem; white-space: nowrap;">Logout</button>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                
+                <!-- View: Dashboard -->
+                <section id="dashboard" class="view-section active">
+                    <div class="summary-cards">
+                        <div class="card stat-card">
+                            <div class="stat-icon"><i class="fa-solid fa-wallet"></i></div>
+                            <div class="stat-details">
+                                <h3>Total Aset</h3>
+                                <p class="stat-value" id="stat-total-assets">Rp 0</p>
+                            </div>
+                        </div>
+                        <div class="card stat-card">
+                            <div class="stat-icon alert"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                            <div class="stat-details">
+                                <h3>Total Liabilitas</h3>
+                                <p class="stat-value" id="stat-total-liabilities">Rp 0</p>
+                            </div>
+                        </div>
+                        <div class="card stat-card">
+                            <div class="stat-icon success"><i class="fa-solid fa-scale-balanced"></i></div>
+                            <div class="stat-details">
+                                <h3>Aset Neto</h3>
+                                <p class="stat-value" id="stat-total-net-assets">Rp 0</p>
+                            </div>
+                        </div>
+                        <div class="card stat-card">
+                            <div class="stat-icon warning"><i class="fa-solid fa-money-bill-trend-up"></i></div>
+                            <div class="stat-details">
+                                <h3>Surplus/Defisit YTD</h3>
+                                <p class="stat-value" id="stat-surplus-deficit">Rp 0</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Grafik Ringkasan Keuangan</h3>
+                            </div>
+                            <div class="card-body" style="position: relative; height: 250px;">
+                                <canvas id="financeChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Tren Pendapatan & Pengeluaran (1 Tahun)</h3>
+                            </div>
+                            <div class="card-body" style="position: relative; height: 250px;">
+                                <canvas id="incomeExpenseChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- View: Journal Input -->
+                <section id="journal-input" class="view-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Input Jurnal Umum</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="journal-form">
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="journal-number">No. Jurnal</label>
+                                        <input type="text" id="journal-number" class="form-control" readonly>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="journal-date">Tanggal Transaksi</label>
+                                        <input type="date" id="journal-date" class="form-control" required>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="journal-customer">Nama Pelanggan</label>
+                                        <input type="text" id="journal-customer" class="form-control" placeholder="Contoh: Budi Santoso" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label for="journal-description">Keterangan / Uraian</label>
+                                        <input type="text" id="journal-description" class="form-control" placeholder="Contoh: Penerimaan donasi pembangunan masjid..." required>
+                                    </div>
+                                </div>
+                                
+                                <div class="journal-entries-container">
+                                    <table class="table entry-table">
+                                        <thead>
+                                            <tr>
+                                                <th width="40%">Akun</th>
+                                                <th width="25%">Debit (Rp)</th>
+                                                <th width="25%">Kredit (Rp)</th>
+                                                <th width="10%">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="journal-entries-body">
+                                            <!-- Entry rows generated by JS -->
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="totals-row">
+                                                <td class="text-right"><strong>Total:</strong></td>
+                                                <td class="text-right"><strong id="total-debit">0</strong></td>
+                                                <td class="text-right"><strong id="total-kredit">0</strong></td>
+                                                <td><span id="balance-status" class="badge badge-error">Tidak Balance</span></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="button" class="btn btn-secondary" id="btn-add-row"><i class="fa-solid fa-plus"></i> Tambah Baris Akun</button>
+                                    <button type="button" class="btn btn-outline" onclick="printCurrentJournal()"><i class="fa-solid fa-print"></i> Cetak Formulir</button>
+                                    <div class="spacer"></div>
+                                    <button type="button" class="btn btn-outline" id="btn-reset-journal">Reset Form</button>
+                                    <button type="submit" class="btn btn-primary" id="btn-save-journal" disabled>Simpan Jurnal</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid" style="margin-top: 1.5rem;">
+                        <div class="card recent-journals">
+                            <div class="card-header">
+                                <h3>Jurnal Terbaru</h3>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table" id="recent-journals-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Tanggal</th>
+                                            <th>Keterangan</th>
+                                            <th>Akun</th>
+                                            <th class="text-right">Debit</th>
+                                            <th class="text-right">Kredit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Data will be populated via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- View: Reports -->
+                <section id="reports" class="view-section">
+                    <div class="card reports-filter" style="margin-bottom: 1.5rem; padding: 1.5rem;">
+                        <h4 style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 1rem;">Filter Periode Laporan</h4>
+                        <div class="form-row" style="margin-bottom: 0;">
+                            <div class="form-group col-md-4">
+                                <label for="filter-start">Tanggal Mulai</label>
+                                <input type="date" id="filter-start" class="form-control">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="filter-end">Tanggal Akhir</label>
+                                <input type="date" id="filter-end" class="form-control">
+                            </div>
+                            <div class="form-group col-md-4" style="display: flex; align-items: flex-end; gap: 0.5rem;">
+                                <button class="btn btn-primary" id="btn-apply-filter" style="flex: 1;">Terapkan</button>
+                                <button class="btn btn-outline" id="btn-reset-filter">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reports-nav" style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <button class="btn btn-tab active" data-report="posisi-keuangan">Laporan Posisi Keuangan</button>
+                            <button class="btn btn-tab" data-report="penghasilan-komprehensif">Laporan Penghasilan Komprehensif</button>
+                            <button class="btn btn-tab" data-report="perubahan-aset-neto">Laporan Perubahan Aset Neto</button>
+                            <button class="btn btn-tab" data-report="buku-besar">Laporan Buku Besar</button>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem; align-items: center;">
+                            <button class="btn btn-outline btn-sm" id="btn-export-excel"><i class="fa-solid fa-file-excel"></i> Export Excel</button>
+                            <button class="btn btn-primary btn-sm" onclick="window.print()"><i class="fa-solid fa-print"></i> Cetak Laporan</button>
+                        </div>
+                    </div>
+
+                    <!-- Laporan Posisi Keuangan -->
+                    <div class="card report-card active" id="report-posisi-keuangan">
+                        <div class="report-header">
+                            <h2>Entitas Nonlaba Demo</h2>
+                            <h3>Laporan Posisi Keuangan</h3>
+                            <p>Per <span id="lp-date-current">Hari Ini</span></p>
+                        </div>
+                        <div class="report-body" id="laporan-posisi-keuangan-content">
+                            <!-- Report content generated via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Laporan Penghasilan Komprehensif -->
+                    <div class="card report-card" id="report-penghasilan-komprehensif">
+                        <div class="report-header">
+                            <h2>Entitas Nonlaba Demo</h2>
+                            <h3>Laporan Penghasilan Komprehensif</h3>
+                            <p>Periode yang berakhir pada <span id="lpk-date-current">Hari Ini</span></p>
+                        </div>
+                        <div class="report-body" id="laporan-penghasilan-komprehensif-content">
+                             <!-- Report content generated via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Laporan Perubahan Aset Neto -->
+                    <div class="card report-card" id="report-perubahan-aset-neto">
+                        <div class="report-header">
+                            <h2>Entitas Nonlaba Demo</h2>
+                            <h3>Laporan Perubahan Aset Neto</h3>
+                            <p>Periode yang berakhir pada <span id="lpan-date-current">Hari Ini</span></p>
+                        </div>
+                        <div class="report-body" id="laporan-perubahan-aset-neto-content">
+                             <!-- Report content generated via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Laporan Buku Besar -->
+                    <div class="card report-card" id="report-buku-besar">
+                        <div class="report-header">
+                            <h2>Entitas Nonlaba Demo</h2>
+                            <h3>Laporan Buku Besar</h3>
+                            <p>Periode <span id="lbb-date-current">Hari Ini</span></p>
+                        </div>
+                        <div class="report-body" id="laporan-buku-besar-content">
+                             <!-- Report content generated via JS -->
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- View: Settings - Identity -->
+                <section id="settings-identity" class="view-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Identitas Entitas</h3>
+                            <p class="text-muted">Atur nama, alamat, dan logo untuk laporan keuangan.</p>
+                        </div>
+                        <div class="card-body">
+                            <form id="identity-form">
+                                <div class="form-row">
+                                    <div class="form-group col-md-8">
+                                        <label for="entity-name">Nama Entitas</label>
+                                        <input type="text" id="entity-name" class="form-control" placeholder="Contoh: Yayasan Sejahtera" required>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="entity-logo">Logo Entitas (Gambar)</label>
+                                        <input type="file" id="entity-logo" class="form-control" accept="image/*" style="padding-top: 0.4rem;">
+                                        <small class="text-muted" style="display:block; margin-top:0.25rem;">Biarkan kosong jika tidak ingin mengubah logo.</small>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label for="entity-address">Alamat</label>
+                                        <input type="text" id="entity-address" class="form-control" placeholder="Contoh: Jl. Merdeka No. 1, Jakarta">
+                                    </div>
+                                </div>
+                                <div class="form-actions" style="justify-content: flex-end;">
+                                    <button type="submit" class="btn btn-primary">Simpan Identitas</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- View: Settings - Users -->
+                <section id="settings-users" class="view-section">
+                    <div class="card">
+                        <div class="card-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                                <h3>Manajemen Akun Login</h3>
+                                <p class="text-muted">Tambah, hapus, dan kelola akun pengguna yang dapat masuk ke sistem.</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form id="user-account-form" style="margin-bottom: 1.5rem;">
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="new-user-username">Username</label>
+                                        <input type="text" id="new-user-username" class="form-control" placeholder="Contoh: pengguna1" required>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="new-user-password">Password</label>
+                                        <input type="password" id="new-user-password" class="form-control" placeholder="••••••••" required>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="new-user-role">Peran</label>
+                                        <select id="new-user-role" class="form-control">
+                                            <option value="Admin">Administrator</option>
+                                            <option value="User">Pengguna</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-actions" style="justify-content: flex-end; margin-top: 0.75rem;">
+                                    <button type="submit" class="btn btn-primary">Tambah Akun</button>
+                                </div>
+                            </form>
+
+                            <p class="text-muted" style="margin-bottom: 1rem;">Gunakan tombol Reset untuk mengganti kata sandi akun jika diperlukan.</p>
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="user-accounts-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Username</th>
+                                            <th>Peran</th>
+                                            <th class="text-right">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- User accounts inserted by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- View: Settings - COA -->
+                <section id="settings-coa" class="view-section">
+                    <div class="card">
+                        <div class="card-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                                <h3>Bagan Akun (Chart of Accounts) PSAK 35</h3>
+                                <p class="text-muted">Kelola daftar akun untuk entitas Anda.</p>
+                            </div>
+                            <button class="btn btn-sm btn-primary" id="btn-toggle-add-coa" type="button"><i class="fa-solid fa-plus"></i> Tambah Akun</button>
+                        </div>
+                        <div class="card-body">
+                            <div id="add-coa-container" style="display: none; margin-bottom: 1.5rem; padding: 1.5rem; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+                                <h4 style="margin-bottom: 1rem; font-size: 1rem;">Tambah Akun Baru</h4>
+                                <form id="add-coa-form">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4">
+                                            <label>Kode Akun</label>
+                                            <input type="text" id="new-coa-code" class="form-control" placeholder="Contoh: 114" required>
+                                        </div>
+                                        <div class="form-group col-md-8">
+                                            <label>Nama Akun</label>
+                                            <input type="text" id="new-coa-name" class="form-control" placeholder="Contoh: Piutang Karyawan" required>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Tipe Akun</label>
+                                            <select id="new-coa-type" class="form-control" required>
+                                                <option value="asset">Aset</option>
+                                                <option value="asset-contra">Aset Kontra</option>
+                                                <option value="liability">Liabilitas</option>
+                                                <option value="net-asset">Aset Neto</option>
+                                                <option value="revenue">Penghasilan</option>
+                                                <option value="expense">Beban</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Pembatasan</label>
+                                            <select id="new-coa-restriction" class="form-control" required>
+                                                <option value="none">Tidak Relevan</option>
+                                                <option value="unrestricted">Tanpa Pembatasan</option>
+                                                <option value="restricted">Dengan Pembatasan</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Saldo Normal</label>
+                                            <select id="new-coa-balance" class="form-control" required>
+                                                <option value="debit">Debit</option>
+                                                <option value="credit">Kredit</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-actions" style="justify-content: flex-end; margin-top: 0.5rem;">
+                                        <button type="button" class="btn btn-outline" id="btn-cancel-add-coa">Batal</button>
+                                        <button type="submit" class="btn btn-primary">Simpan Akun</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="coa-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Kode</th>
+                                            <th>Nama Akun</th>
+                                            <th>Tipe</th>
+                                            <th>Pembatasan</th>
+                                            <th>Saldo Normal</th>
+                                            <th class="text-right" width="80">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Coa content generated via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- View: Setup Saldo Awal -->
+                <section id="opening-balance" class="view-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Setup Saldo Awal</h3>
+                            <p class="text-muted">Masukkan saldo awal untuk setiap akun. Total Debit dan Kredit harus seimbang.</p>
+                        </div>
+                        <div class="card-body">
+                            <form id="opening-balance-form">
+                                <div class="form-group" style="max-width: 300px;">
+                                    <label for="ob-date">Tanggal Saldo Awal</label>
+                                    <input type="date" id="ob-date" class="form-control" required>
+                                </div>
+                                <div class="table-responsive" style="margin-top: 1.5rem;">
+                                    <table class="table entry-table">
+                                        <thead>
+                                            <tr>
+                                                <th width="15%">Kode</th>
+                                                <th width="35%">Nama Akun</th>
+                                                <th width="25%">Debit (Rp)</th>
+                                                <th width="25%">Kredit (Rp)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="ob-entries-body">
+                                            <!-- Generated via JS -->
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="totals-row">
+                                                <td colspan="2" class="text-right"><strong>Total Saldo Awal:</strong></td>
+                                                <td class="text-right"><strong id="ob-total-debit">0</strong></td>
+                                                <td class="text-right"><strong id="ob-total-kredit">0</strong></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="4" class="text-right">
+                                                    <span id="ob-balance-status" class="badge badge-error">Tidak Balance</span>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div class="form-actions" style="margin-top: 1.5rem; justify-content: flex-end;">
+                                    <button type="submit" class="btn btn-primary" id="btn-save-ob" disabled>Simpan Saldo Awal</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Notification Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Print Receipt Container -->
+    <div id="print-receipt-container" style="display: none;"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

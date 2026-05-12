@@ -1,0 +1,48 @@
+CREATE DATABASE IF NOT EXISTS psak35 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE psak35;
+
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(100) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  role VARCHAR(50) DEFAULT 'User',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS identity (
+  id INT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  address TEXT,
+  logo TEXT
+);
+
+CREATE TABLE IF NOT EXISTS coa (
+  id VARCHAR(10) PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  type VARCHAR(50),
+  category VARCHAR(100),
+  normal_balance VARCHAR(10),
+  restriction VARCHAR(50),
+  report VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS journals (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  journal_number VARCHAR(50) NOT NULL UNIQUE,
+  date DATE NOT NULL,
+  customer VARCHAR(255),
+  description TEXT,
+  is_opening_balance TINYINT(1) DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS journal_entries (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  journal_id INT NOT NULL,
+  account_id VARCHAR(10) NOT NULL,
+  debit DECIMAL(20,2) DEFAULT 0,
+  credit DECIMAL(20,2) DEFAULT 0,
+  notes TEXT,
+  FOREIGN KEY (journal_id) REFERENCES journals(id) ON DELETE CASCADE,
+  FOREIGN KEY (account_id) REFERENCES coa(id)
+);
